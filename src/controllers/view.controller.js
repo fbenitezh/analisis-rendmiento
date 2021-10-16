@@ -4,12 +4,12 @@ const productoService = new ProductoService();
 class ViewController{
 
   async index(req,res){
-    if(!req.isAuthenticated()){
+    if(req.isAuthenticated()){
       const productos = await productoService.listarUsuariosRandom();
       res.render('productos',{
         productos,
-        // nombre:req.session.passport.user.displayName,
-        // foto:req.session.passport.user.photos[0].value
+        nombre:req.session.passport.user.displayName,
+        foto:req.session.passport.user.photos[0].value
       });
     }else{
       res.redirect('/login');
