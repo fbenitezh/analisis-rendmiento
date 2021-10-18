@@ -1,9 +1,11 @@
-export const verifySession = async (req,res,next)=>{
+export const verifySession = (req,res,next)=>{
   try {
-    if(!req.session.nombre){
-      return res.redirect("/login");
+    console.log(req.user);
+    if(req.isAuthenticated()){
+      next();
+    }else{
+      res.redirect("/login");
     }
-    next();
   } catch (error) {
     res.status(400).json({
       ok:false,

@@ -3,28 +3,25 @@ const productoService = new ProductoService();
 
 class ViewController{
 
-  async index(req,res){
-    if(req.isAuthenticated()){
-      const productos = await productoService.listarUsuariosRandom();
-      res.render('productos',{
-        productos,
-        nombre:req.session.passport.user.displayName,
-        foto:req.session.passport.user.photos[0].value
-      });
-    }else{
-      res.redirect('/login');
-    }
+  async renderProductos(req,res){
+    const productos = await productoService.listarUsuariosRandom();
+    const {user} = req.session.passport;
+    res.render('productos',{
+      productos,
+      nombre:user.displayName,
+      foto:user.photos[0].value
+    });
   }
 
-  async renderLogin(req,res){
+  renderLogin(req,res){
     res.render('login',{});
   }
 
-  async failLogin(req,res){
+  failLogin(req,res){
     res.render('login-error',{});
   }
 
-  async renderLogout(req,res){
+  renderLogout(req,res){
     try {
       req.logout();
       res.redirect('/');
