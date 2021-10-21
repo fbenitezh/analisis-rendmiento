@@ -11,13 +11,12 @@ import passport from "passport";
 import {Strategy} from "passport-facebook";
 import MongoSession from "connect-mongodb-session";
 import {cacheControl} from './middlewares/cacheControl.js';
-import './db.js';
 
 dotenv.config();
 const productosRoute = new ProductosRoute();
 const app = express();
 const port = process.env.PORT || 8080;
-const { MONGODB_URI, SECRET_SESSION, NODE_ENV } = process.env;
+const { MONGODB_URI, SECRET_SESSION } = process.env;
 const MongoStore = MongoSession(session);
 const store = new MongoStore({
   uri: MONGODB_URI,
