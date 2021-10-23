@@ -1,11 +1,12 @@
 import express from "express";
+import minimist from "minimist";
 import cors from "cors";
 import path from "path";
 import handlebars from "express-handlebars";
 import session from "express-session";
 import dotenv from "dotenv";
 import authRoute from "./routes/auth.route.js";
-import ProductosRoute from "./routes/productos.route.js";
+import ApiRoute from "./routes/api.route.js";
 import viewRoute from "./routes/view.route.js";
 import passport from "passport";
 import {Strategy} from "passport-facebook";
@@ -13,9 +14,19 @@ import MongoSession from "connect-mongodb-session";
 import {cacheControl} from './middlewares/cacheControl.js';
 
 dotenv.config();
-const productosRoute = new ProductosRoute();
+const optionsMinimist = {
+  alias:{
+    p:'puerto',
+  },
+  default:{
+    puerto:8080
+  }
+};
+const arg = minimist(process.argv.slice(2),optionsMinimist);
+
+const apiRoute = new ApiRoute();
 const app = express();
-const port = process.env.PORT || 8080;
+const port = arg.puerto;
 const { MONGODB_URI, SECRET_SESSION } = process.env;
 const MongoStore = MongoSession(session);
 const store = new MongoStore({
@@ -81,7 +92,7 @@ app.engine(
 app.set("views", path.resolve() + "/src/views");
 app.set("view engine", ".hbs");
 
-app.use("/api", productosRoute);
+app.use("/api", apiRoute);
 app.use("/auth", authRoute);
 app.use("/", viewRoute);
 

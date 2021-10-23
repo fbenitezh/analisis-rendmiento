@@ -7,6 +7,7 @@ const viewController = new ViewController();
 router.get("/login",viewController.renderLogin);
 router.get("/logout", verifySession,viewController.renderLogout);
 router.get("/failLogin",viewController.failLogin);
+router.get("/info",viewController.getSystemInfo);
 router.get("/",verifySession,viewController.renderProductos);
 
 export default router;
