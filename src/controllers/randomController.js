@@ -17,6 +17,7 @@ class RandomController{
         */ 
         const resultadoJson = JSON.stringify(respuestaChild)
         res.status(200).end(resultadoJson);
+        randomsFork.kill();
       }
     }); 
   }
