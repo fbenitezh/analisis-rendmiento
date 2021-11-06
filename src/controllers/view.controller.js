@@ -6,34 +6,11 @@ class ViewController{
 
   async renderProductos(req,res){
     const productos = await productoService.listarUsuariosRandom();
-    const {user} = req.session.passport;
     res.render('productos',{
-      productos,
-      nombre:user.displayName,
-      foto:user.photos[0].value
+      productos
     });
   }
-
-  renderLogin(req,res){
-    res.render('login',{});
-  }
-
-  failLogin(req,res){
-    res.render('login-error',{});
-  }
-
-  renderLogout(req,res){
-    try {
-      req.logout();
-      res.redirect('/');
-    } catch (error) {
-      res.status(400).json({
-        ok: false,
-        error: error.message,
-      });
-    }
-  }
-
+  
   getSystemInfo(req,res){
     res.send(`
       <b>Argumentos de entrada:</b> ${processInfo.commandLineArgs} <br>
@@ -43,6 +20,7 @@ class ViewController{
       <b>Path de ejecución:</b> ${processInfo.nodePath} <br>
       <b>Process id:</b> ${processInfo.processId} <br>
       <b>Carpeta del proyecto:</b> ${processInfo.projectPath} <br>
+      <b>Numero de procesos:</b> ${processInfo.cpus}<br>
     `);
   }
 

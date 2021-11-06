@@ -7,6 +7,8 @@ import {
   cwd, 
   pid
 } from 'process';
+import os from 'os';
+const numCPUs = os.cpus().length;
 
 const cliArgs = argv.slice(2).join(' ').toString();
 
@@ -17,5 +19,6 @@ export const processInfo = {
   memoriaRSS: memoryUsage().rss,
   nodePath: execPath,
   projectPath: cwd(),
-  processId: pid
+  processId: pid,
+  cpus:numCPUs
 }
