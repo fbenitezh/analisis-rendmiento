@@ -1,49 +1,39 @@
-import express from "express";
+import cluster from 'cluster';
+import { cpus } from 'os';
 import minimist from "minimist";
-import cors from "cors";
-import path from "path";
-import handlebars from "express-handlebars";
 import dotenv from "dotenv";
-import ApiRoute from "./routes/api.route.js";
-import viewRoute from "./routes/view.route.js";
-import {cacheControl} from './middlewares/cacheControl.js';
-
+import app from './server.js';
 dotenv.config();
+
 const optionsMinimist = {
   alias:{
     p:'puerto',
   },
   default:{
-    puerto:8080
+    puerto:8080,
+    modo:'fork'
   }
 };
 const arg = minimist(process.argv.slice(2),optionsMinimist);
+console.log(arg);
+const {puerto:port,modo} = arg;
 
-const apiRoute = new ApiRoute();
-const app = express();
-const port = arg.puerto;
+if (modo == 'cluster' && cluster.isMaster) {
+  const numCPUs = cpus().length;
+  for (let i = 1; i <= numCPUs; i++) {
+    cluster.fork()
+  }
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(cacheControl);
-app.use(express.static(path.resolve() + "/src/views"));
-
-app.engine(
-  ".hbs",
-  handlebars({
-    extname: ".hbs",
-    defaultLayout: "main.hbs",
-    layoutsDir: path.resolve() + "/src/views/layouts",
+  cluster.on('exit', worker => {
+    console.log('Worker', worker.process.pid, 'exited on: ', new Date().toLocaleString());
+    cluster.fork()
   })
-);
-  
-app.set("views", path.resolve() + "/src/views");
-app.set("view engine", ".hbs");
+} else {
+  process.on('exit', code => {
+    console.log('Salida con código de error: ' + code)
+  })
 
-app.use("/api", apiRoute);
-app.use("/", viewRoute);
-
-app.listen(port, () => {
-  console.log(`Server on port ${port}`);
-});
+  app.listen(port, () => {
+    console.log(`Server running on: http://localhost:${port}`)
+  })
+}
