@@ -7,16 +7,16 @@ dotenv.config();
 
 const optionsMinimist = {
   alias:{
-    p:'puerto',
+    p:'port',
   },
   default:{
-    puerto:8080,
+    port:8080,
     modo:'fork'
   }
 };
 const arg = minimist(process.argv.slice(2),optionsMinimist);
 console.log(arg);
-const {puerto:port,modo} = arg;
+const {port,modo} = arg;
 
 if (modo == 'cluster' && cluster.isMaster) {
   const numCPUs = cpus().length;

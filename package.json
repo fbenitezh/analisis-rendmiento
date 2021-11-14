@@ -5,8 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development  nodemon ./src/index.js",
-    "start": "NODE_ENV=production  node ./src/index.js"
+    "nodemon:fork": "nodemon --inspect src -p 8080",
+    "nodemon:cluster": "nodemon --inspect src --modo cluster -p 8080",
+    "pm2-fork":"pm2 start src/index.js --name node-fork --watch -- --port 8080",
+    "pm2-cluster":"pm2 start src/index.js --name node-fork --watch -i max -- --port 8080"
   },
   "keywords": [],
   "author": "",
