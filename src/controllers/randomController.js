@@ -1,4 +1,5 @@
-import { fork } from 'child_process';
+import { logger } from '../utils/logger.js';
+import { listaRandoms } from '../utils/random.number.utils.js';
 //@ts-check
 
 class RandomController{
@@ -6,20 +7,16 @@ class RandomController{
   * @type {number}
   */ 
   calcularAleatorio(req,res){
-    const numero = req.query.cantidad ? +req.query.cantidad : 100000000;
-    const randomsFork = fork('./src/utils/random.number.utils.js');
-    randomsFork.on('message', respuestaChild => {
-      if (respuestaChild == 'ready') {
-        randomsFork.send(numero)
-      } else {
-        /** 
-        * @type {string} 
-        */ 
-        const resultadoJson = JSON.stringify(respuestaChild)
-        res.status(200).end(resultadoJson);
-        randomsFork.kill();
-      }
-    }); 
+    try {
+      const numero = req.query.cantidad ? +req.query.cantidad : 100000000;
+      logger.info(`Cantidad ${numero}`);
+  
+      const result = listaRandoms(numero);
+      
+      res.send({resultado:result});
+    } catch (error) {
+      logger.error(error);
+    }
   }
 }
 

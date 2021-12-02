@@ -3,6 +3,7 @@ import { cpus } from 'os';
 import minimist from "minimist";
 import dotenv from "dotenv";
 import app from './server.js';
+import { logger } from './utils/logger.js';
 dotenv.config();
 
 const optionsMinimist = {
@@ -15,25 +16,27 @@ const optionsMinimist = {
   }
 };
 const arg = minimist(process.argv.slice(2),optionsMinimist);
-console.log(arg);
+logger.info(arg);
 const {port,modo} = arg;
 
 if (modo == 'cluster' && cluster.isMaster) {
+
+  logger.info("creando cluster");
   const numCPUs = cpus().length;
   for (let i = 1; i <= numCPUs; i++) {
     cluster.fork()
   }
 
   cluster.on('exit', worker => {
-    console.log('Worker', worker.process.pid, 'exited on: ', new Date().toLocaleString());
+    logger.warn('Worker', worker.process.pid, 'exited on: ', new Date().toLocaleString());
     cluster.fork()
   })
 } else {
   process.on('exit', code => {
-    console.log('Salida con código de error: ' + code)
+    logger.error('Salida con código de error: ' + code)
   })
 
   app.listen(port, () => {
-    console.log(`Server running on: http://localhost:${port}`)
+    logger.info(`Server running on: http://localhost:${port}`)
   })
 }

@@ -5,20 +5,23 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "nodemon:fork": "nodemon --inspect src -p 8080",
-    "nodemon:cluster": "nodemon --inspect src --modo cluster -p 8080",
-    "pm2-fork":"pm2 start src/index.js --name node-fork --watch -- --port 8080",
-    "pm2-cluster":"pm2 start src/index.js --name node-fork --watch -i max -- --port 8080"
+    "dev": "NODE_ENV=development node --prof src -p 8080",
+    "start": "NODE_ENV=production node --prof src -p 8080",
+    "dev:inspect":"node --inspect src -p 8080",
+    "start:0x": "0x src/index.js -p 8080",
+    "test:autocannon": "node src/benchmark.js http://localhost:8080/info"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "autocannon": "^7.5.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.4",
     "faker": "^5.5.3",
+    "log4js": "^6.3.0",
     "minimist": "^1.2.5",
     "node-emoji": "^1.11.0"
   },

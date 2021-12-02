@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ProductoController from "../controllers/productos.controller.js";
 import RandomController from "../controllers/randomController.js";
+import { infoRouteLogger } from "../middlewares/routeLogger.js";
 
 class ApiRoute extends Router {
   constructor(props) {
@@ -8,8 +9,8 @@ class ApiRoute extends Router {
     this.productoController = new ProductoController();
     this.randomController = new RandomController();
 
-    this.get("/productos-test",this.productoController.listarUsuarios);
-    this.get("/randoms",this.randomController.calcularAleatorio);
+    this.get("/productos-test", infoRouteLogger,this.productoController.listarUsuarios);
+    this.get("/randoms", infoRouteLogger,this.randomController.calcularAleatorio);
   }
 }
 

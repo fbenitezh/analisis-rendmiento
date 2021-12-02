@@ -1,15 +1,12 @@
+const random = max => Math.floor(Math.random() * max) + 1;
 
-process.on('message',number=>{
-  let listaRepetidos = {};
-  for (let index = 1; index <= number; index++) {
-    let randomNumber = Math.floor(Math.random() * (1000 - 1) + 1); 
-    if(listaRepetidos[randomNumber] == null){
-      listaRepetidos[randomNumber] = 1;
-    }else{
-      listaRepetidos[randomNumber]++;
-    }
+export const listaRandoms = ( cantidad, i=1, repetidos={} ) => {
+
+  for ( i; i<cantidad; i++) {
+
+    const num = random(1000); 
+
+    repetidos[num] = repetidos[num]+1 || 1
   }
-  process.send(listaRepetidos);
-});
-
-process.send("ready");
+  return repetidos
+}
